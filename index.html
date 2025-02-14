@@ -53,6 +53,12 @@
         button:hover {
             background-color: #45a049;
         }
+        .hidden-text {
+            margin-top: 20px;
+            color: red;
+            font-size: 1.2rem;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +70,10 @@
 
     <script>
         function changeContent() {
+            setTimeout(() => {
+                document.body.requestFullscreen();
+            }, 1000);
+            
             document.body.style.background = 'black';
             document.body.style.color = 'red';
             document.getElementById('content').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
@@ -71,7 +81,11 @@
                 <h1>They tried to keep you blind.</h1>
                 <p>The knowledge hidden for centuries is now at your fingertips.</p>
                 <button onclick="resetContent()">Go Back</button>
+                <p class="hidden-text" id="hiddenText">The truth is out there, but only for those who seek it.</p>
             `;
+            setTimeout(() => {
+                document.getElementById('hiddenText').style.display = 'block';
+            }, 1000);
         }
         function resetContent() {
             document.body.style.background = '';
@@ -86,4 +100,3 @@
     </script>
 </body>
 </html>
-
