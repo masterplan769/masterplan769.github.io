@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg/1024px-Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg.png'); /* Replace with your image URL */
+            background-image: url(''https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg/1024px-Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg.png');
             background-size: cover;
             background-position: center;
             margin: 0;
@@ -16,16 +16,18 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: white; /* Text color to ensure readability against the background */
+            color: white;
+            transition: background 0.3s ease-in-out;
         }
         .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             width: 80%;
             max-width: 600px;
+            transition: background 0.3s ease-in-out;
         }
         h1 {
             color: #4CAF50;
@@ -37,12 +39,42 @@
             font-size: 1.2rem;
             line-height: 1.6;
         }
+        .toggle-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background 0.3s ease-in-out;
+        }
+        .toggle-button:hover {
+            background: #45a049;
+        }
+        .dark-mode {
+            background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dark_embroidery.png');
+            background-color: #222;
+            color: white;
+        }
+        .dark-mode .container {
+            background-color: #333;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>The truth runs deeper than you imagine.</h1>
         <p>Historical facts that were never revealed or were erased by adversaries.</p>
+        <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
     </div>
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
 </body>
 </html>
+
