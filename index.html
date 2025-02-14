@@ -16,16 +16,18 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: white; /* Text color to ensure readability against the background */
+            color: white;
+            transition: background 0.5s, color 0.5s;
         }
         .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
             max-width: 600px;
+            transition: background 0.5s;
         }
         h1 {
             color: #4CAF50;
@@ -37,13 +39,51 @@
             font-size: 1.2rem;
             line-height: 1.6;
         }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="content">
         <h1>The truth runs deeper than you imagine.</h1>
         <p>Historical facts that were never revealed or were erased by adversaries.</p>
+        <button onclick="changeContent()">Continue</button>
     </div>
+
+    <script>
+        function changeContent() {
+            document.body.style.background = 'black';
+            document.body.style.color = 'red';
+            document.getElementById('content').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            document.getElementById('content').innerHTML = `
+                <h1>They tried to keep you blind.</h1>
+                <p>The knowledge hidden for centuries is now at your fingertips.</p>
+                <button onclick="resetContent()">Go Back</button>
+            `;
+        }
+        function resetContent() {
+            document.body.style.background = '';
+            document.body.style.color = 'white';
+            document.getElementById('content').style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+            document.getElementById('content').innerHTML = `
+                <h1>The truth runs deeper than you imagine.</h1>
+                <p>Historical facts that were never revealed or were erased by adversaries.</p>
+                <button onclick="changeContent()">Continue</button>
+            `;
+        }
+    </script>
 </body>
 </html>
 
