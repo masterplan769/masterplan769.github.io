@@ -91,6 +91,14 @@
         .gif-right {
             right: 20px;
         }
+
+        /* Black background with GIFs intact */
+        .black-background {
+            background-color: black !important;
+            background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f2968b32-6f8d-43e4-bb59-278ac087d336/decvh6d-161c9e3a-b504-4c83-a33a-bc6dc35708d9.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YyOTY4YjMyLTZmOGQtNDNlNC1iYjU5LTI3OGFjMDg3ZDMzNlwvZGVjdmg2ZC0xNjFjOWUzYS1iNTA0LTRjODMtYTMzYS1iYzZkYzM1NzA4ZDkuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.WV3_x52T8DE14AKHb59tyBmIl7O59alay--V9M3Pu2w') no-repeat center center fixed;
+            background-size: cover;
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -112,62 +120,58 @@
     </div>
 
     <script>
-    let data = [];
+        let data = [];
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("data.txt")
-        .then(response => response.text())
-        .then(text => {
-            let entries = text.split("\n\n"); // Split entries by double newlines
-            data = entries.map(entry => {
-                let lines = entry.trim().split("\n");
-                let titleMatch = lines[0].match(/^(\d+)\.\s*(.+)$/); // Match the number and title
-                if (titleMatch) {
-                    let number = titleMatch[1]; // Capture the number
-                    let title = titleMatch[2]; // Capture the title
-                    let content = lines.slice(1).join("\n"); // Capture the content
-                    return { number, title, content };
-                }
-                return null;
-            }).filter(Boolean); // Remove any invalid entries
-        })
-        .catch(error => console.error("Error loading data.txt:", error));
-});
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("data.txt")
+                .then(response => response.text())
+                .then(text => {
+                    let entries = text.split("\n\n"); // Split entries by double newlines
+                    data = entries.map(entry => {
+                        let lines = entry.trim().split("\n");
+                        let title = lines[0]; // Capture the title
+                        let content = lines.slice(1).join("\n"); // Capture the content
+                        return { title, content }; // Return title and content only
+                    });
+                })
+                .catch(error => console.error("Error loading data.txt:", error));
+        });
 
-function searchData() {
-    let query = document.getElementById("searchInput").value.toLowerCase();
-    let resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
+        function searchData() {
+            let query = document.getElementById("searchInput").value.toLowerCase();
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
 
-    if (query === "") return;
+            if (query === "") return;
 
-    let results = data.filter(item => item.title.toLowerCase().includes(query));
-    
-    if (results.length === 0) {
-        resultsDiv.innerHTML = "<p>No results found</p>";
-    } else {
-        // Only show the first result, if any
-        let item = results[0];
-        let div = document.createElement("div");
-        div.className = "result-item";
-        div.innerText = item.title; // Only show the title, no number
-        div.onclick = () => showContent(item.title, item.content);
-        resultsDiv.appendChild(div);
-    }
-}
+            let results = data.filter(item => item.title.toLowerCase().includes(query));
 
-function showContent(title, content) {
-    document.getElementById("searchView").style.display = "none";
-    document.getElementById("contentView").style.display = "block";
-    document.getElementById("contentTitle").innerText = title;
-    document.getElementById("contentText").innerText = content;
-}
+            if (results.length === 0) {
+                resultsDiv.innerHTML = "<p>No results found</p>";
+            } else {
+                // Only show the first result, if any
+                let item = results[0];
+                let div = document.createElement("div");
+                div.className = "result-item";
+                div.innerText = item.title; // Only show the title
+                div.onclick = () => showContent(item.title, item.content);
+                resultsDiv.appendChild(div);
+            }
+        }
 
-function goBack() {
-    document.getElementById("searchView").style.display = "block";
-    document.getElementById("contentView").style.display = "none";
-}
+        function showContent(title, content) {
+            document.getElementById("searchView").style.display = "none";
+            document.getElementById("contentView").style.display = "block";
+            document.body.classList.add("black-background"); // Add the class to change the background
+            document.getElementById("contentTitle").innerText = title;
+            document.getElementById("contentText").innerText = content;
+        }
 
+        function goBack() {
+            document.getElementById("searchView").style.display = "block";
+            document.getElementById("contentView").style.display = "none";
+            document.body.classList.remove("black-background"); // Remove the class to revert background
+        }
     </script>
 </body>
 </html>
