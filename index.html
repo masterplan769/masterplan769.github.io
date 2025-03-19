@@ -112,19 +112,24 @@
     </div>
 
     <script>
-      let data = [];
+    let data = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch("data.txt")
         .then(response => response.text())
         .then(text => {
             let entries = text.split("\n\n"); // Split entries by double newlines
-            data = entries.map((entry, index) => {
+            data = entries.map(entry => {
                 let lines = entry.trim().split("\n");
-                let title = lines[0];
-                let content = lines.slice(1).join("\n");
-                return { number: index + 1, title, content }; // Use index as the number internally
-            });
+                let titleMatch = lines[0].match(/^(\d+)\.\s*(.+)$/); // Match the number and title
+                if (titleMatch) {
+                    let number = titleMatch[1]; // Capture the number
+                    let title = titleMatch[2]; // Capture the title
+                    let content = lines.slice(1).join("\n"); // Capture the content
+                    return { number, title, content };
+                }
+                return null;
+            }).filter(Boolean); // Remove any invalid entries
         })
         .catch(error => console.error("Error loading data.txt:", error));
 });
@@ -145,7 +150,7 @@ function searchData() {
         let item = results[0];
         let div = document.createElement("div");
         div.className = "result-item";
-        div.innerText = item.title; // Show title only, no number
+        div.innerText = item.title; // Only show the title, no number
         div.onclick = () => showContent(item.title, item.content);
         resultsDiv.appendChild(div);
     }
@@ -162,6 +167,7 @@ function goBack() {
     document.getElementById("searchView").style.display = "block";
     document.getElementById("contentView").style.display = "none";
 }
+
     </script>
 </body>
 </html>
