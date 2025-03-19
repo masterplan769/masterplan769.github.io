@@ -33,6 +33,7 @@
 
         #results {
             margin-top: 20px;
+            text-align: left; /* Align results to the left */
         }
 
         .result-item {
@@ -48,60 +49,32 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-     #contentView {
-    display: none;
-    text-align: center;
-    padding: 20px;
-    transition: opacity 0.3s ease-in-out;
-    position: relative;
-    z-index: 10;
-    height: 70vh; /* Set a fixed height */
-    overflow-y: scroll; /* Allow scrolling */
-    background: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
-    padding: 20px;
-}
-
-/* Hides the scrollbar while keeping scroll functionality */
-#contentView::-webkit-scrollbar {
-    display: none; /* Hides the scrollbar */
-}
-
-#contentView {
-    -ms-overflow-style: none;  /* Hides scrollbar for Internet Explorer */
-    scrollbar-width: none;     /* Hides scrollbar for Firefox */
-}
-
-        #contentView::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            transition: background 0.3s ease;
+        .result-count {
+            margin-bottom: 10px;
+            font-size: 16px;
         }
 
-        #contentView::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.8);
+        #contentView {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.3s ease-in-out;
+            position: relative;
+            z-index: 10;
+            height: 70vh; /* Set a fixed height */
+            overflow-y: scroll; /* Allow scrolling */
+            background: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
+            padding: 20px;
         }
 
-        #contentText {
-            max-width: 700px;
-            margin: auto;
-            font-size: 18px;
-            text-align: left;
+        /* Hides the scrollbar while keeping scroll functionality */
+        #contentView::-webkit-scrollbar {
+            display: none; /* Hides the scrollbar */
         }
 
-        /* Back Button */
-        #backButton {
-            background: #ff006e;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-
-        #backButton:hover {
-            background: #d6005a;
+        #contentView {
+            -ms-overflow-style: none;  /* Hides scrollbar for Internet Explorer */
+            scrollbar-width: none;     /* Hides scrollbar for Firefox */
         }
 
         /* GIF Styling */
@@ -123,7 +96,7 @@
         /* Black background with GIFs intact */
         .black-background {
             background-color: black !important;
-            background-image: none !important; /* Remove the gradient background */
+            background-image: none !important;
             color: white !important;
         }
     </style>
@@ -167,16 +140,22 @@
         function searchData() {
             let query = document.getElementById("searchInput").value.toLowerCase();
             let resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = "";
+            let resultCountDiv = document.createElement("div");
+            resultCountDiv.className = "result-count";
+            resultsDiv.innerHTML = "";  // Clear results container
 
             if (query === "") return;
 
             let results = data.filter(item => item.title.toLowerCase().includes(query));
 
             if (results.length === 0) {
-                resultsDiv.innerHTML = "<p>No results found</p>";
+                resultCountDiv.innerHTML = "<p>No results found</p>";
+                resultsDiv.appendChild(resultCountDiv);
             } else {
-                // Only show the first result, if any
+                resultCountDiv.innerHTML = `<p>${results.length} result(s) found</p>`;
+                resultsDiv.appendChild(resultCountDiv);
+
+                // Show only the first result, if any
                 let item = results[0];
                 let div = document.createElement("div");
                 div.className = "result-item";
@@ -189,7 +168,7 @@
         function showContent(title, content) {
             document.getElementById("searchView").style.display = "none";
             document.getElementById("contentView").style.display = "block";
-            document.body.classList.add("black-background"); // Add the class to change the background
+            document.body.classList.add("black-background");
             document.getElementById("contentTitle").innerText = title;
             document.getElementById("contentText").innerText = content;
         }
@@ -197,7 +176,7 @@
         function goBack() {
             document.getElementById("searchView").style.display = "block";
             document.getElementById("contentView").style.display = "none";
-            document.body.classList.remove("black-background"); // Remove the class to revert background
+            document.body.classList.remove("black-background");
         }
     </script>
 </body>
