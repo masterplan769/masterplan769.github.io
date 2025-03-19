@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search for truth</title>
+    <title>Search for Truth</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,7 @@
             color: white;
             text-align: center;
             padding: 20px;
+            transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
         }
 
         .container {
@@ -76,8 +77,8 @@
 </head>
 <body>
     <div class="container">
-        <h1></h1>
-        <input type="text" id="searchInput" placeholder="Searching" onkeyup="searchData()">
+        <h1>Search for Truth</h1>
+        <input type="text" id="searchInput" placeholder="Searching..." onkeyup="searchData()">
         <div id="results"></div>
     </div>
 
@@ -125,10 +126,27 @@
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalText").innerText = content;
             document.getElementById("modal").style.display = "flex";
+
+            // Change website theme dynamically
+            changeTheme();
         }
 
         function closeModal() {
             document.getElementById("modal").style.display = "none";
+        }
+
+        function changeTheme() {
+            const colors = [
+                { bg: "#ff6f61", text: "#fff" },
+                { bg: "#6a0572", text: "#f4e04d" },
+                { bg: "#3a86ff", text: "#ffbe0b" },
+                { bg: "#ff006e", text: "#8338ec" },
+                { bg: "#14213d", text: "#e5e5e5" }
+            ];
+
+            let randomTheme = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.background = randomTheme.bg;
+            document.body.style.color = randomTheme.text;
         }
     </script>
 </body>
