@@ -3,112 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Truth</title>
+    <title>Cool Search Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg/1024px-Flag_of_the_NSDAP_%281920–1945%2C_1-1%29.svg.png'); /* Replace with your image URL */
-            background-size: cover;
-            background-position: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background: linear-gradient(45deg, #2a2a72, #009ffd);
             color: white;
-            transition: background 0.5s, color 0.5s;
-        }
-        .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 80%;
+            padding: 20px;
+        }
+
+        .container {
             max-width: 600px;
-            transition: background 0.5s;
+            margin: auto;
         }
-        h1 {
-            color: #4CAF50;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #333;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-        button {
+
+        input {
+            width: 100%;
+            padding: 10px;
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #4CAF50;
-            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        .hidden-text {
+
+        #results {
             margin-top: 20px;
-            color: red;
-            font-size: 1.2rem;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .result-item:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Modal Styling */
+        .modal {
             display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="content">
-        <h1>The truth runs deeper than you imagine.</h1>
-        <p>Historical facts that were never revealed or were erased by adversaries.</p>
-        <button onclick="changeContent()">Continue</button>
+    <div class="container">
+        <h1>Search Something Cool</h1>
+        <input type="text" id="searchInput" placeholder="Type keywords..." onkeyup="searchData()">
+        <div id="results"></div>
+    </div>
+
+    <!-- Modal for Details -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalText"></p>
+        </div>
     </div>
 
     <script>
-        function changeContent() {
-            // Wait for 1 second before requesting fullscreen
-            setTimeout(() => {
-                // Check if the browser supports fullscreen and request it
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                    document.documentElement.mozRequestFullScreen();
-                } else if (document.documentElement.webkitRequestFullscreen) { // Safari
-                    document.documentElement.webkitRequestFullscreen();
-                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                    document.documentElement.msRequestFullscreen();
-                }
-            }, 1000);
+        let data = [];
 
-            // Change background and text color after 1 second
-            document.body.style.background = 'black';
-            document.body.style.color = 'red';
-            document.getElementById('content').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-            document.getElementById('content').innerHTML = `
-                <h1>They tried to keep you blind.</h1>
-                <p>The knowledge hidden for centuries is now at your fingertips.</p>
-                <button onclick="resetContent()">Go Back</button>
-                <p class="hidden-text" id="hiddenText">The truth is out there, but only for those who seek it.</p>
-            `;
-            
-            setTimeout(() => {
-                document.getElementById('hiddenText').style.display = 'block';
-            }, 1000);
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("data.txt")
+                .then(response => response.text())
+                .then(text => {
+                    data = text.split("\n\n").map(entry => {
+                        let lines = entry.split("\n");
+                        return { title: lines[0], content: lines.slice(1).join("\n") };
+                    });
+                });
+        });
+
+        function searchData() {
+            let query = document.getElementById("searchInput").value.toLowerCase();
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+
+            if (query === "") return;
+
+            let results = data.filter(item => item.title.toLowerCase().includes(query));
+            results.forEach(item => {
+                let div = document.createElement("div");
+                div.className = "result-item";
+                div.innerText = item.title;
+                div.onclick = () => openModal(item.title, item.content);
+                resultsDiv.appendChild(div);
+            });
         }
 
-        function resetContent() {
-            document.body.style.background = '';
-            document.body.style.color = 'white';
-            document.getElementById('content').style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-            document.getElementById('content').innerHTML = `
-                <h1>The truth runs deeper than you imagine.</h1>
-                <p>Historical facts that were never revealed or were erased by adversaries.</p>
-                <button onclick="changeContent()">Continue</button>
-            `;
+        function openModal(title, content) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalText").innerText = content;
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
         }
     </script>
 </body>
