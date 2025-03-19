@@ -48,11 +48,17 @@
         /* Full Page Content */
         #contentView {
             display: none;
-            text-align: left;
-            max-width: 700px;
-            margin: auto;
+            text-align: center;
             padding: 20px;
             transition: opacity 0.3s ease-in-out;
+            position: relative;
+        }
+
+        #contentText {
+            max-width: 700px;
+            margin: auto;
+            font-size: 18px;
+            text-align: left;
         }
 
         #backButton {
@@ -69,6 +75,22 @@
         #backButton:hover {
             background: #d6005a;
         }
+
+        /* GIF Styling */
+        .gif-container {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+        }
+
+        .gif-left {
+            left: 20px;
+        }
+
+        .gif-right {
+            right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +105,10 @@
         <button id="backButton" onclick="goBack()">⬅ Back</button>
         <h1 id="contentTitle"></h1>
         <p id="contentText"></p>
+
+        <!-- GIFs -->
+        <img src="left.gif" class="gif-container gif-left" id="gifLeft">
+        <img src="right.gif" class="gif-container gif-right" id="gifRight">
     </div>
 
     <script>
@@ -123,7 +149,11 @@
             document.getElementById("contentTitle").innerText = title;
             document.getElementById("contentText").innerText = content;
 
-            changeTheme();
+            document.body.style.background = "black";
+            document.body.style.color = "white";
+
+            document.getElementById("gifLeft").style.display = "block";
+            document.getElementById("gifRight").style.display = "block";
         }
 
         function goBack() {
@@ -132,21 +162,11 @@
 
             document.body.style.background = "linear-gradient(45deg, #2a2a72, #009ffd)";
             document.body.style.color = "white";
-        }
 
-        function changeTheme() {
-            const colors = [
-                { bg: "#ff6f61", text: "#fff" },
-                { bg: "#6a0572", text: "#f4e04d" },
-                { bg: "#3a86ff", text: "#ffbe0b" },
-                { bg: "#ff006e", text: "#8338ec" },
-                { bg: "#14213d", text: "#e5e5e5" }
-            ];
-
-            let randomTheme = colors[Math.floor(Math.random() * colors.length)];
-            document.body.style.background = randomTheme.bg;
-            document.body.style.color = randomTheme.text;
+            document.getElementById("gifLeft").style.display = "none";
+            document.getElementById("gifRight").style.display = "none";
         }
     </script>
 </body>
 </html>
+
