@@ -12,6 +12,9 @@
             text-align: center;
             padding: 20px;
             transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .container {
@@ -52,6 +55,7 @@
             padding: 20px;
             transition: opacity 0.3s ease-in-out;
             position: relative;
+            z-index: 10;
         }
 
         #contentText {
@@ -95,8 +99,7 @@
         /* Black background with GIFs intact */
         .black-background {
             background-color: black !important;
-            background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f2968b32-6f8d-43e4-bb59-278ac087d336/decvh6d-161c9e3a-b504-4c83-a33a-bc6dc35708d9.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YyOTY4YjMyLTZmOGQtNDNlNC1iYjU5LTI3OGFjMDg3ZDMzNlwvZGVjdmg2ZC0xNjFjOWUzYS1iNTA0LTRjODMtYTMzYS1iYzZkYzM1NzA4ZDkuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.WV3_x52T8DE14AKHb59tyBmIl7O59alay--V9M3Pu2w') no-repeat center center fixed;
-            background-size: cover;
+            background-image: none !important; /* Remove the gradient background when in black mode */
             color: white !important;
         }
     </style>
@@ -175,3 +178,4 @@
     </script>
 </body>
 </html>
+
