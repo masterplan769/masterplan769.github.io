@@ -48,30 +48,28 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-        /* Full Page Content */
-        #contentView {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            transition: opacity 0.3s ease-in-out;
-            position: relative;
-            z-index: 10;
-            height: 70vh; /* Set a fixed height */
-            overflow-y: scroll; /* Enable vertical scrolling */
-            background: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
-            padding: 20px;
-            border-radius: 8px;
-        }
+     #contentView {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.3s ease-in-out;
+    position: relative;
+    z-index: 10;
+    height: 70vh; /* Set a fixed height */
+    overflow-y: scroll; /* Allow scrolling */
+    background: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
+    padding: 20px;
+}
 
-        /* Custom Scrollbar Styling */
-        #contentView::-webkit-scrollbar {
-            width: 12px;
-        }
+/* Hides the scrollbar while keeping scroll functionality */
+#contentView::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar */
+}
 
-        #contentView::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
+#contentView {
+    -ms-overflow-style: none;  /* Hides scrollbar for Internet Explorer */
+    scrollbar-width: none;     /* Hides scrollbar for Firefox */
+}
 
         #contentView::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.5);
