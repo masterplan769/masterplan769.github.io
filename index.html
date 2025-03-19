@@ -80,6 +80,19 @@
             background: #d6005a;
         }
 
+        #contentView {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.3s ease-in-out;
+    position: relative;
+    z-index: 10;
+    height: 70vh; /* Set a fixed height */
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    background: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
+    padding: 20px;
+}
+
         /* GIF Styling */
         .gif-container {
             position: fixed;
