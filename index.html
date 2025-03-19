@@ -96,13 +96,14 @@
             fetch("data.txt")
                 .then(response => response.text())
                 .then(text => {
-                    let entries = text.split(/\n(?=\d+\.)/g);
+                    let entries = text.split(/\n(?=\d+\.\s)/g);
                     data = entries.map(entry => {
-                        let lines = entry.split("\n");
+                        let lines = entry.trim().split("\n");
                         let titleMatch = lines[0].match(/(\d+)\.\s*(.+)/);
                         return titleMatch ? { number: titleMatch[1], title: titleMatch[2], content: lines.slice(1).join("\n") } : null;
                     }).filter(Boolean);
-                });
+                })
+                .catch(error => console.error("Error loading data.txt:", error));
         });
 
         function searchData() {
