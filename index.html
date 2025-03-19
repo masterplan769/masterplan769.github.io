@@ -112,60 +112,56 @@
     </div>
 
     <script>
-        let data = [];
+      let data = [];
 
-        document.addEventListener("DOMContentLoaded", () => {
-            fetch("data.txt")
-                .then(response => response.text())
-                .then(text => {
-                    data = text.split("\n\n").map(entry => {
-                        let lines = entry.split("\n");
-                        return { title: lines[0], content: lines.slice(1).join("\n") };
-                    });
-                });
-        });
-
-        function searchData() {
-            let query = document.getElementById("searchInput").value.toLowerCase();
-            let resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = "";
-
-            if (query === "") return;
-
-            let results = data.filter(item => item.title.toLowerCase().includes(query));
-            results.forEach(item => {
-                let div = document.createElement("div");
-                div.className = "result-item";
-                div.innerText = item.title;
-                div.onclick = () => showContent(item.title, item.content);
-                resultsDiv.appendChild(div);
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("data.txt")
+        .then(response => response.text())
+        .then(text => {
+            let entries = text.split("\n\n"); // Split entries by double newlines
+            data = entries.map((entry, index) => {
+                let lines = entry.trim().split("\n");
+                let title = lines[0];
+                let content = lines.slice(1).join("\n");
+                return { number: index + 1, title, content }; // Use index as the number internally
             });
-        }
+        })
+        .catch(error => console.error("Error loading data.txt:", error));
+});
 
-        function showContent(title, content) {
-            document.getElementById("searchView").style.display = "none";
-            document.getElementById("contentView").style.display = "block";
+function searchData() {
+    let query = document.getElementById("searchInput").value.toLowerCase();
+    let resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
 
-            document.getElementById("contentTitle").innerText = title;
-            document.getElementById("contentText").innerText = content;
+    if (query === "") return;
 
-            document.body.style.background = "black";
-            document.body.style.color = "white";
+    let results = data.filter(item => item.title.toLowerCase().includes(query));
+    
+    if (results.length === 0) {
+        resultsDiv.innerHTML = "<p>No results found</p>";
+    } else {
+        // Only show the first result, if any
+        let item = results[0];
+        let div = document.createElement("div");
+        div.className = "result-item";
+        div.innerText = item.title; // Show title only, no number
+        div.onclick = () => showContent(item.title, item.content);
+        resultsDiv.appendChild(div);
+    }
+}
 
-            document.getElementById("gifLeft").style.display = "block";
-            document.getElementById("gifRight").style.display = "block";
-        }
+function showContent(title, content) {
+    document.getElementById("searchView").style.display = "none";
+    document.getElementById("contentView").style.display = "block";
+    document.getElementById("contentTitle").innerText = title;
+    document.getElementById("contentText").innerText = content;
+}
 
-        function goBack() {
-            document.getElementById("searchView").style.display = "block";
-            document.getElementById("contentView").style.display = "none";
-
-            document.body.style.background = "linear-gradient(45deg, #2a2a72, #009ffd)";
-            document.body.style.color = "white";
-
-            document.getElementById("gifLeft").style.display = "none";
-            document.getElementById("gifRight").style.display = "none";
-        }
+function goBack() {
+    document.getElementById("searchView").style.display = "block";
+    document.getElementById("contentView").style.display = "none";
+}
     </script>
 </body>
 </html>
