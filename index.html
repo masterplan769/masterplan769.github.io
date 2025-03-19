@@ -17,6 +17,7 @@
         .container {
             max-width: 600px;
             margin: auto;
+            transition: opacity 0.3s ease-in-out;
         }
 
         input {
@@ -44,51 +45,44 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-        /* Modal Styling */
-        .modal {
+        /* Full Page Content */
+        #contentView {
             display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
             text-align: left;
-            max-width: 400px;
+            max-width: 700px;
             margin: auto;
+            padding: 20px;
+            transition: opacity 0.3s ease-in-out;
         }
 
-        .close {
-            float: right;
-            font-size: 20px;
+        #backButton {
+            background: #ff006e;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        #backButton:hover {
+            background: #d6005a;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="searchView">
         <h1>Search for Truth</h1>
         <input type="text" id="searchInput" placeholder="Searching..." onkeyup="searchData()">
         <div id="results"></div>
     </div>
 
-    <!-- Modal for Details -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <p id="modalText"></p>
-        </div>
+    <!-- Full Page Content -->
+    <div id="contentView">
+        <button id="backButton" onclick="goBack()">⬅ Back</button>
+        <h1 id="contentTitle"></h1>
+        <p id="contentText"></p>
     </div>
 
     <script>
@@ -117,22 +111,27 @@
                 let div = document.createElement("div");
                 div.className = "result-item";
                 div.innerText = item.title;
-                div.onclick = () => openModal(item.title, item.content);
+                div.onclick = () => showContent(item.title, item.content);
                 resultsDiv.appendChild(div);
             });
         }
 
-        function openModal(title, content) {
-            document.getElementById("modalTitle").innerText = title;
-            document.getElementById("modalText").innerText = content;
-            document.getElementById("modal").style.display = "flex";
+        function showContent(title, content) {
+            document.getElementById("searchView").style.display = "none";
+            document.getElementById("contentView").style.display = "block";
 
-            // Change website theme dynamically
+            document.getElementById("contentTitle").innerText = title;
+            document.getElementById("contentText").innerText = content;
+
             changeTheme();
         }
 
-        function closeModal() {
-            document.getElementById("modal").style.display = "none";
+        function goBack() {
+            document.getElementById("searchView").style.display = "block";
+            document.getElementById("contentView").style.display = "none";
+
+            document.body.style.background = "linear-gradient(45deg, #2a2a72, #009ffd)";
+            document.body.style.color = "white";
         }
 
         function changeTheme() {
