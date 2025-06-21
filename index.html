@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Átirányítás...</title>
   <script>
-    fetch('current-url.json')
+    fetch('link.json')
       .then(response => response.json())
       .then(data => {
         window.location.href = data.url;
