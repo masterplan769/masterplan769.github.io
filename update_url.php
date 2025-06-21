@@ -4,7 +4,7 @@
 $repoPath = "C:/Users/Planscaut/masterplan769.github.io/mypage";
 
 // Frissítendő Cloudflare Tunnel URL
-$currentUrl = "https://your-current-tunnel-url.trycloudflare.com";
+$currentUrl = "https://cheers-deleted-virtual-reliance.trycloudflare.com";
 
 // --- Script ---
 
