@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <title>Átirányítás...</title>
+  <script>
+    fetch('current-url.json')
+      .then(response => response.json())
+      .then(data => {
+        window.location.href = data.url;
+      })
+      .catch(() => {
+        document.body.innerText = "Come back later.";
+      });
+  </script>
+</head>
+<body>
+  Átirányítás...
+</body>
+</html>
