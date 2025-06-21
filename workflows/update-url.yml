@@ -1,0 +1,27 @@
+name: Update Tunnel URL
+
+on:
+  workflow_dispatch:  # kézi futtatás
+
+jobs:
+  update-url:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update current-url.json
+        run: |
+          echo '{"url": "https://your-current-tunnel-url.trycloudflare.com"}' > current-url.json
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add current-url.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Automatikus tunnel URL frissítés"
+            git push
+          else
+            echo "Nincs változás, commit nem történt."
+          fi
