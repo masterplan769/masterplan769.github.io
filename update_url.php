@@ -1,7 +1,7 @@
 <?php
 // --- Konfiguráció ---
 // GitHub repó helyi mappája (pl. a te gépeden)
-$repoPath = "C:/GitHub/my-page";
+$repoPath = "C:/GitHub/mypage";
 
 // Frissítendő Cloudflare Tunnel URL
 $currentUrl = "https://your-current-tunnel-url.trycloudflare.com";
