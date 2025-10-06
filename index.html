@@ -1,32 +1,81 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<title>Chatbot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Történetgeneráló Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    #storyBox { border: 1px solid #ccc; padding: 10px; min-height: 200px; background: #fff; }
+    #controls { margin-top: 10px; }
+  </style>
 </head>
 <body>
-<h1>Beszélgető AI</h1>
-<input id="userInput" type="text" placeholder="Írj valamit...">
-<button id="sendBtn">Küldés</button>
-<p id="botReply"></p>
+  <h1>Történetgeneráló Chatbot</h1>
 
-<script src="brain.js"></script>
-<script>
-const net = new MyBrain();
-net.loadFromURL('brain.txt');
+  <div id="storyBox"></div>
 
-const inputEl = document.getElementById('userInput');
-const replyEl = document.getElementById('botReply');
+  <div id="controls">
+    <input type="text" id="userInput" placeholder="Adj egy kezdő szót vagy mondatot..." style="width:70%">
+    <button id="generateBtn">Generálás</button>
+  </div>
 
-document.getElementById('sendBtn').addEventListener('click', () => {
-  const userText = inputEl.value;
-  const reply = net.run(userText);
-  replyEl.innerText = reply;
-});
+  <script>
+    // ===== Saját Brain.js a HTML-ben =====
+    class MyBrain {
+      constructor() {
+        this.sentences = [];
+      }
 
-inputEl.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') document.getElementById('sendBtn').click();
-});
-</script>
+      train(data) {
+        this.sentences = data
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+      }
+
+      run(seed) {
+        if(this.sentences.length === 0) return "Nincs betanított mondat.";
+        
+        let story = [];
+        let current = seed || "";
+        for(let i = 0; i < 5; i++) { // 5 mondat hosszú történet
+          let candidates = this.sentences.filter(s => current === "" || s.toLowerCase().startsWith(current.toLowerCase().split(" ").slice(-1)[0]));
+          if(candidates.length === 0) candidates = this.sentences;
+          let next = candidates[Math.floor(Math.random() * candidates.length)];
+          story.push(next);
+          current = next;
+        }
+        return story.join(" ");
+      }
+    }
+    // ===== Brain.js vége =====
+
+    const net = new MyBrain();
+    const storyBox = document.getElementById("storyBox");
+
+    // ===== brain.txt betöltése GitHub raw URL-ről =====
+    const txtUrl = 'brain.txt'; // cseréld a saját URL-re
+
+    fetch(txtUrl)
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split('\n');
+        net.train(lines);
+        console.log('Brain betanítva, mondatok száma:', lines.length);
+      })
+      .catch(err => console.error('Hiba a .txt betöltésénél:', err));
+
+    // ===== Gomb esemény =====
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const seed = document.getElementById('userInput').value.trim();
+      const story = net.run(seed);
+      storyBox.innerText = story;
+      document.getElementById('userInput').value = '';
+    });
+
+    document.getElementById('userInput').addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') document.getElementById('generateBtn').click();
+    });
+  </script>
 </body>
 </html>
