@@ -1,0 +1,4 @@
+Hi|Hello there!
+How are you?|I am fine, thank you!
+Bye|See you later!
+What's your name?|I am AI!
