@@ -1,9 +1,43 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <title>Átirányítás...</title>
-  <meta http-equiv="refresh" content="0; url=https://cheers-deleted-virtual-reliance.trycloudflare.com" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain.js Chatbot</title>
+  <!-- Brain.js 0.7.4 böngésző verzió -->
+  <script src="https://unpkg.com/brain.js@2.0.0-beta.24/dist/browser.js"></script>
 </head>
 <body>
+  <h1>Mini Chatbot</h1>
+  <input id="userInput" type="text" placeholder="Írj valamit...">
+  <button id="sendBtn">Küldés</button>
+  <p id="botReply"></p>
 
+  <script>
+    const net = new brain.NeuralNetwork();
+    const txtUrl = 'brain.txt'; // Cseréld ki a valós URL-re GitHub-on
+
+    // Minták betöltése
+    fetch(txtUrl)
+      .then(res => res.text())
+      .then(text => {
+        const trainingData = text.split('\n').map(line => {
+          const [input, output] = line.split('|');
+          return { input: input.trim(), output: output.trim() };
+        });
+
+        // AI tanítása
+        net.train(trainingData, { iterations: 1000 });
+        console.log('AI trained!');
+
+        // Felhasználói input kezelése
+        document.getElementById('sendBtn').addEventListener('click', () => {
+          const userText = document.getElementById('userInput').value;
+          const output = net.run(userText);
+          document.getElementById('botReply').innerText = output || "Nem tudom.";
+        });
+      })
+      .catch(err => console.error('Hiba a minták betöltésekor:', err));
+  </script>
+</body>
+</html>
