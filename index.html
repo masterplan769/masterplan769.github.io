@@ -9,10 +9,9 @@
   <h1>Chatbot</h1>
   <input id="userInput" type="text" placeholder="Írj valamit...">
   <button id="sendBtn">Küldés</button>
-  <p id="botReply"></p>
+  <div id="story"></div>
 
   <script>
-    // ===== Saját Brain.js kód itt a HTML-ben =====
     class MyBrain {
       constructor() {
         this.patterns = [];
@@ -23,42 +22,49 @@
           .filter(d => d.input && d.output)
           .map(d => ({
             input: d.input.toLowerCase().trim(),
-            output: d.output.trim()
+            output: d.output.split(',').map(o => o.trim()) // több válasz
           }));
       }
 
       run(text) {
         text = text.toLowerCase().trim();
         for (let p of this.patterns) {
-          if (text === p.input) return p.output;
+          if (text.includes(p.input)) {
+            const rand = Math.floor(Math.random() * p.output.length);
+            return p.output[rand];
+          }
         }
-        return "Nem tudom.";
+        return "A történet folytatódik...";
       }
     }
-    // ===== Brain.js vége =====
 
     const net = new MyBrain();
 
-    // ===== brain.txt betöltése GitHub raw URL-ről =====
-    const txtUrl = 'https://langchain-ai.github.io/langgraph/llms.txt'; // cseréld a saját URL-re
+    // ===== Brain.txt betöltése GitHub raw URL-ről =====
+    const txtUrl = 'https://raw.githubusercontent.com/felhasznalo/repo/main/brain.txt'; // cseréld a saját GitHub URL-edre
 
     fetch(txtUrl)
       .then(res => res.text())
       .then(text => {
         const trainingData = text.split('\n').map(line => {
           const [input, output] = line.split('|');
-          return { input: input, output: output };
-        });
+          if(input && output) return { input: input, output: output };
+        }).filter(Boolean);
         net.train(trainingData);
         console.log('AI betanítva:', trainingData);
       })
       .catch(err => console.error('Hiba a .txt betöltésénél:', err));
 
     // ===== Üzenetküldés kezelése =====
+    const storyDiv = document.getElementById('story');
     document.getElementById('sendBtn').addEventListener('click', () => {
       const userText = document.getElementById('userInput').value;
+      if(!userText) return;
       const reply = net.run(userText);
-      document.getElementById('botReply').innerText = reply;
+      storyDiv.innerHTML += `<p><strong>Te:</strong> ${userText}</p>`;
+      storyDiv.innerHTML += `<p><strong>Bot:</strong> ${reply}</p>`;
+      document.getElementById('userInput').value = '';
+      storyDiv.scrollTop = storyDiv.scrollHeight;
     });
 
     document.getElementById('userInput').addEventListener('keydown', (e) => {
