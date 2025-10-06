@@ -3,41 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brain.js Chatbot</title>
-  <!-- Brain.js 0.7.4 böngésző verzió -->
-  <script src="https://unpkg.com/brain.js@2.0.0-beta.24/dist/browser.js"></script>
+  <title>Saját Brain.js Chatbot</title>
 </head>
 <body>
-  <h1>Mini Chatbot</h1>
+  <h1>Chatbot</h1>
   <input id="userInput" type="text" placeholder="Írj valamit...">
   <button id="sendBtn">Küldés</button>
   <p id="botReply"></p>
 
   <script>
-    const net = new brain.NeuralNetwork();
-    const txtUrl = 'brain.txt'; // Cseréld ki a valós URL-re GitHub-on
+    // ===== Saját Brain.js kód itt a HTML-ben =====
+    class MyBrain {
+      constructor() {
+        this.patterns = [];
+      }
 
-    // Minták betöltése
+      train(data) {
+        this.patterns = data
+          .filter(d => d.input && d.output)
+          .map(d => ({
+            input: d.input.toLowerCase().trim(),
+            output: d.output.trim()
+          }));
+      }
+
+      run(text) {
+        text = text.toLowerCase().trim();
+        for (let p of this.patterns) {
+          if (text === p.input) return p.output;
+        }
+        return "Nem tudom.";
+      }
+    }
+    // ===== Brain.js vége =====
+
+    const net = new MyBrain();
+
+    // ===== brain.txt betöltése GitHub raw URL-ről =====
+    const txtUrl = 'brain.txt'; // cseréld a saját URL-re
+
     fetch(txtUrl)
       .then(res => res.text())
       .then(text => {
         const trainingData = text.split('\n').map(line => {
           const [input, output] = line.split('|');
-          return { input: input.trim(), output: output.trim() };
+          return { input: input, output: output };
         });
-
-        // AI tanítása
-        net.train(trainingData, { iterations: 1000 });
-        console.log('AI trained!');
-
-        // Felhasználói input kezelése
-        document.getElementById('sendBtn').addEventListener('click', () => {
-          const userText = document.getElementById('userInput').value;
-          const output = net.run(userText);
-          document.getElementById('botReply').innerText = output || "Nem tudom.";
-        });
+        net.train(trainingData);
+        console.log('AI betanítva:', trainingData);
       })
-      .catch(err => console.error('Hiba a minták betöltésekor:', err));
+      .catch(err => console.error('Hiba a .txt betöltésénél:', err));
+
+    // ===== Üzenetküldés kezelése =====
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const userText = document.getElementById('userInput').value;
+      const reply = net.run(userText);
+      document.getElementById('botReply').innerText = reply;
+    });
+
+    document.getElementById('userInput').addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') document.getElementById('sendBtn').click();
+    });
   </script>
 </body>
 </html>
