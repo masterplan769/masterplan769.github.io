@@ -1,75 +1,32 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saját Brain.js Chatbot</title>
+<meta charset="UTF-8">
+<title>Chatbot</title>
 </head>
 <body>
-  <h1>Chatbot</h1>
-  <input id="userInput" type="text" placeholder="Írj valamit...">
-  <button id="sendBtn">Küldés</button>
-  <div id="story"></div>
+<h1>Beszélgető AI</h1>
+<input id="userInput" type="text" placeholder="Írj valamit...">
+<button id="sendBtn">Küldés</button>
+<p id="botReply"></p>
 
-  <script>
-    class MyBrain {
-      constructor() {
-        this.patterns = [];
-      }
+<script src="brain.js"></script>
+<script>
+const net = new MyBrain();
+net.loadFromURL('brain.txt');
 
-      train(data) {
-        this.patterns = data
-          .filter(d => d.input && d.output)
-          .map(d => ({
-            input: d.input.toLowerCase().trim(),
-            output: d.output.split(',').map(o => o.trim()) // több válasz
-          }));
-      }
+const inputEl = document.getElementById('userInput');
+const replyEl = document.getElementById('botReply');
 
-      run(text) {
-        text = text.toLowerCase().trim();
-        for (let p of this.patterns) {
-          if (text.includes(p.input)) {
-            const rand = Math.floor(Math.random() * p.output.length);
-            return p.output[rand];
-          }
-        }
-        return "A történet folytatódik...";
-      }
-    }
+document.getElementById('sendBtn').addEventListener('click', () => {
+  const userText = inputEl.value;
+  const reply = net.run(userText);
+  replyEl.innerText = reply;
+});
 
-    const net = new MyBrain();
-
-    // ===== Brain.txt betöltése GitHub raw URL-ről =====
-    const txtUrl = 'https://raw.githubusercontent.com/felhasznalo/repo/main/brain.txt'; // cseréld a saját GitHub URL-edre
-
-    fetch(txtUrl)
-      .then(res => res.text())
-      .then(text => {
-        const trainingData = text.split('\n').map(line => {
-          const [input, output] = line.split('|');
-          if(input && output) return { input: input, output: output };
-        }).filter(Boolean);
-        net.train(trainingData);
-        console.log('AI betanítva:', trainingData);
-      })
-      .catch(err => console.error('Hiba a .txt betöltésénél:', err));
-
-    // ===== Üzenetküldés kezelése =====
-    const storyDiv = document.getElementById('story');
-    document.getElementById('sendBtn').addEventListener('click', () => {
-      const userText = document.getElementById('userInput').value;
-      if(!userText) return;
-      const reply = net.run(userText);
-      storyDiv.innerHTML += `<p><strong>Te:</strong> ${userText}</p>`;
-      storyDiv.innerHTML += `<p><strong>Bot:</strong> ${reply}</p>`;
-      document.getElementById('userInput').value = '';
-      storyDiv.scrollTop = storyDiv.scrollHeight;
-    });
-
-    document.getElementById('userInput').addEventListener('keydown', (e) => {
-      if(e.key === 'Enter') document.getElementById('sendBtn').click();
-    });
-  </script>
+inputEl.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') document.getElementById('sendBtn').click();
+});
+</script>
 </body>
 </html>
